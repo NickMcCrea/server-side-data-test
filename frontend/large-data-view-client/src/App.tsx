@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import BasicTable from './BasicTable';
 import AgGridComponent from './AgGridComponent';
+import MyAgGridComponent from './AgGridSimple';
 
 //some fake table data for the table. First row should be a header
 const data = [
@@ -212,7 +213,8 @@ const data = [
 function App() {
   return (
     <div className="App">
-        <AgGridComponent/>
+        {/* <MyAgGridComponent data={data}/> */}
+        <AgGridComponent />
     </div>
   );
 }
