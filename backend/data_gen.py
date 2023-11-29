@@ -62,7 +62,7 @@ json_spec = load_json_data(json_spec_file_path)
 custom_values = load_json_data(custom_values_file_path)  # This will be an empty dict if the file is not found
 
 # Generate data rows
-num_rows = 10  # specify the number of rows you want to generate
+num_rows = 10000  # specify the number of rows you want to generate
 generated_data = generate_data_rows(json_spec, custom_values, num_rows)
 
 # Write data to a CSV file

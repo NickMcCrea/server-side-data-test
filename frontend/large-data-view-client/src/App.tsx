@@ -1,7 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import BasicTable from './BasicTable';
 import AgGridComponent from './AgGridComponent';
 import MyAgGridComponent from './AgGridSimple';
 
@@ -213,8 +212,8 @@ const data = [
 function App() {
   return (
     <div className="App">
-        {/* <MyAgGridComponent data={data}/> */}
-        <AgGridComponent />
+              <AgGridComponent /> 
+              {/* <MyAgGridComponent data={data} />  */}
     </div>
   );
 }

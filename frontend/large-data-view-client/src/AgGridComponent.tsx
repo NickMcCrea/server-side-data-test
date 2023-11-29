@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import  { useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { GridOptions, GridReadyEvent, IServerSideDatasource, IServerSideGetRowsParams, IServerSideGetRowsRequest } from 'ag-grid-community';
-import { GridApi } from 'ag-grid-community/dist/lib/gridApi';
+import {  GridReadyEvent, IServerSideDatasource } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
 import 'ag-grid-enterprise';
-import { get } from 'http';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+
 
 const AgGridComponent = () => {
 
@@ -52,7 +51,8 @@ const AgGridComponent = () => {
         const promise = fetch('http://localhost:5001/glbal', {
                 method: 'POST',
                 body: JSON.stringify({
-                    // ... include other parameters like sortModel, filterModel, etc.
+                    startRow: 1,
+                    endRow: 0,
                 }),
                 headers: { "Content-Type": "application/json" },
             })
@@ -89,19 +89,19 @@ const AgGridComponent = () => {
 
 
     return (
-        <div style={containerStyle}>
-            <div
-                style={gridStyle}
-                className={
-                    "ag-theme-quartz-dark"
-                }
-            >
+        <div 
+            className="ag-theme-alpine" 
+            style={{ height: 900, width: '80%', alignContent: 'center', marginLeft: 'auto', marginRight: 'auto', marginTop: '10px'}}
+        >
+            
                 <AgGridReact
                     rowModelType={'serverSide'}
                     onGridReady={onGridReady}
                 />
-            </div>
+
         </div>
+
+        
     );
 };
 
