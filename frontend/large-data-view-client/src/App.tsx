@@ -2,7 +2,6 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import AgGridComponent from './AgGridComponent';
-import MyAgGridComponent from './AgGridSimple';
 
 //some fake table data for the table. First row should be a header
 const data = [
