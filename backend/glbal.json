@@ -4,11 +4,6 @@
     "category": "GL Balances",
     "fields": [
         {
-            "fieldName": "row_no",
-            "fieldDescription": "Row number",
-            "fieldType": "INTEGER"
-        },
-        {
             "fieldName": "pl_date",
             "fieldDescription": "Profit and Loss Date",
             "fieldType": "DATE"
