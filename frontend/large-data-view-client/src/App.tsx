@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import BasicTable from './BasicTable';
+import AgGridComponent from './AgGridComponent';
 
 //some fake table data for the table. First row should be a header
 const data = [
@@ -211,7 +212,7 @@ const data = [
 function App() {
   return (
     <div className="App">
-        <BasicTable data={data} />
+        <AgGridComponent/>
     </div>
   );
 }
