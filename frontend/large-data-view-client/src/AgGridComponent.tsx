@@ -22,6 +22,8 @@ const AgGridComponent = () => {
                 body: JSON.stringify({
                     startRow: params.request.startRow,
                     endRow: params.request.endRow,
+                    sortModel: params.request.sortModel,
+                    filterModel: params.request.filterModel,
                     // ... include other parameters like sortModel, filterModel, etc.
                 }),
                 headers: { "Content-Type": "application/json" },
@@ -37,9 +39,7 @@ const AgGridComponent = () => {
                 console.log('setting row data: ', data);
                 params.success({rowData: data });
 
-                //check the grid data
-                params.api!.forEachNode((node) => console.log(node.data));
-                
+              
             })
            
           },
@@ -47,35 +47,39 @@ const AgGridComponent = () => {
       };
 
       const getColumnDefs = (params: GridReadyEvent) => {
-
-        const promise = fetch('http://localhost:5001/glbal', {
-                method: 'POST',
-                body: JSON.stringify({
-                    startRow: 1,
-                    endRow: 0,
-                }),
-                headers: { "Content-Type": "application/json" },
-            })
-
-            promise.then(response => response.json())
-            .then(data => {
-                const columns = Object.keys(data[0]).map(key => {
-                    return { field: key };
-                });
-                return columns;
-            })
-            .then(columns => { 
-                console.log('setting column defs: ', columns);
-                return columns;
-            })
-            .then(cdefs => {
-                params.api!.setGridOption('columnDefs', cdefs);
-                return;
-            })
-        
-           
-
-      }
+        fetch('http://localhost:5001/glbal/meta', {
+            method: 'GET',
+            headers: { "Content-Type": "application/json" },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const fields = data.fields;
+    
+            const columns = fields.map((field: any) => {
+                return {
+                    headerName: field.fieldDescription,
+                    field: field.fieldName,
+                    filter: field.fieldType === 'STRING' ? 'agTextColumnFilter' : 'agNumberColumnFilter',
+                    sortable: true,
+                };
+            });
+    
+            console.log('Setting column defs:', columns);
+            return columns;
+        })
+        .then(columns => { 
+            params.api.setGridOption('columnDefs', columns);
+        })
+        .catch(error => {
+            console.error('Error fetching column definitions:', error);
+        });
+    };
+    
 
       
 
@@ -97,6 +101,7 @@ const AgGridComponent = () => {
                 <AgGridReact
                     rowModelType={'serverSide'}
                     onGridReady={onGridReady}
+                    
                 />
 
         </div>

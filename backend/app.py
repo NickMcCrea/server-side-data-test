@@ -9,41 +9,50 @@ CORS(app, supports_credentials=True)
 
 
 glBalDB = InMemoryDB()
+
 glBalDB.load_csv_to_db('glbal.csv', 'glbal.json')
 
-
+meta_data = glBalDB.load_json('glbal.json')
 
 @app.route('/')
 def home():
     return "Hello, this is the home endpoint!"
 
+@app.route('/glbal/meta', methods=['GET'])
+def glbal_meta():
+    return jsonify(meta_data), 200
+
 @app.route('/glbal', methods=['POST'])
 def glbal():
-    #query = request.json.get("query", "")
-    #print the request in JSON
-    print(request.json)
-
-    #get the 'startRow' from the request
-    startRow = request.json.get("startRow", "")
- 
-    #get the 'endRow' from the request
-    endRow = request.json.get("endRow", "")
-   
-    #limit is the start row + end row
-    #offset is the start row
-
-    #parse startRow and endRow to integers
-    startRow = int(startRow)
-    endRow = int(endRow)
-
+    data = request.json
+    startRow = int(data.get("startRow", 0))
+    endRow = int(data.get("endRow", 100))
     limit = endRow - startRow
     offset = startRow
 
-    
+    # Initialize base query
+    query = "SELECT * FROM omni_gl_balances"
 
-    query = 'select * from omni_gl_balances limit ' + str(limit) + ' offset ' + str(offset) + ';'
+    # Adding filtering
+    filterModel = data.get("filterModel", {})
+    filter_clauses = []
+    for field, filter_data in filterModel.items():
+        if filter_data['type'] == 'contains':
+            filter_clauses.append(f"{field} LIKE '%{filter_data['filter']}%'")
+
+    if filter_clauses:
+        query += " WHERE " + " AND ".join(filter_clauses)
+
+    # Adding sorting
+    sortModel = data.get("sortModel", [])
+    if sortModel:
+        sort_clauses = [f"{sm['colId']} {sm['sort'].upper()}" for sm in sortModel]
+        query += " ORDER BY " + ", ".join(sort_clauses)
+
+    # Adding pagination
+    query += f" LIMIT {limit} OFFSET {offset};"
+
     print(query)
-
     result = glBalDB.query(query)
     return jsonify(result), 200
 
